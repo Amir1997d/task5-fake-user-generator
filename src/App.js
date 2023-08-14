@@ -39,7 +39,7 @@ function App() {
         region={region}
         fakeUsers={fakeUsers}
       />
-      <FakeUsersTable fakeUsers={fakeUsers} loadMoreUsers={loadMoreUsers}/>
+      <FakeUsersTable fakeUsers={fakeUsers} loadMoreUsers={loadMoreUsers} region={region}/>
     </div>
   );
 }
