@@ -1,56 +1,48 @@
-function chooseRandomErrorType() {
-    const errorTypes = ["delete", "add", "swap"];
-    const randomIndex = Math.floor(Math.random() * errorTypes.length);
-    return errorTypes[randomIndex];
-}
+// errorHandlers.js
 
-function deleteCharacter(inputString) {
-  if (inputString.length === 0) {
-    return inputString;
-  }
-  const randomIndex = Math.floor(Math.random() * inputString.length);
-  return inputString.slice(0, randomIndex) + inputString.slice(randomIndex + 1);
-}
+function introduceErrors(user, errorAmount) {
+  const properties = Object.keys(user);
 
-function addCharacter(inputString) {
-  const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  const randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
-  const randomIndex = Math.floor(Math.random() * (inputString.length + 1));
-  return inputString.slice(0, randomIndex) + randomChar + inputString.slice(randomIndex);
-}
+  for (let i = 0; i < errorAmount; i++) {
+    const randomPropertyIndex = Math.floor(Math.random() * properties.length);
+    const randomProperty = properties[randomPropertyIndex];
+    const originalValue = user[randomProperty];
 
-function swapCharacters(inputString) {
-  if (inputString.length < 2) {
-    return inputString;
-  }
-  const randomIndex = Math.floor(Math.random() * (inputString.length - 1));
-  const char1 = inputString[randomIndex];
-  const char2 = inputString[randomIndex + 1];
-  return (
-    inputString.slice(0, randomIndex) +
-    char2 +
-    char1 +
-    inputString.slice(randomIndex + 2)
-  );
-}
+    if (typeof originalValue === "string") { // Check if the property value is a string
+      let newValue = originalValue;
+      const errorType = Math.floor(Math.random() * 3); // 0: swap, 1: delete, 2: add
 
-// function introduceErrors(originalString, errorProbability) {
-function introduceErrors(fakeUser, errorProbability) {
-  console.log(errorProbability);
-  const outputUser = { ...fakeUser };
-  for (const property in outputUser) {
-    if (property !== "index" && Math.random() < errorProbability) {
-      const randomErrorType = chooseRandomErrorType();
-      if (randomErrorType === "delete" && outputUser[property].length > 0) {
-        outputUser[property] = deleteCharacter(outputUser[property]);
-      } else if (randomErrorType === "add") {
-        outputUser[property] = addCharacter(outputUser[property]);
-      } else if (randomErrorType === "swap") {
-        outputUser[property] = swapCharacters(outputUser[property]);
+      switch (errorType) {
+        case 0: // Swap a character
+          if (originalValue.length >= 2) {
+            const randomIndex = Math.floor(Math.random() * originalValue.length);
+            const charArray = originalValue.split('');
+            const temp = charArray[randomIndex];
+            charArray[randomIndex] = charArray[(randomIndex + 1) % charArray.length];
+            charArray[(randomIndex + 1) % charArray.length] = temp;
+            newValue = charArray.join('');
+          }
+          break;
+        case 1: // Delete a character
+          if (originalValue.length >= 2) {
+            const randomIndex = Math.floor(Math.random() * originalValue.length);
+            newValue = originalValue.slice(0, randomIndex) + originalValue.slice(randomIndex + 1);
+          }
+          break;
+        case 2: // Add a character
+          const randomIndex = Math.floor(Math.random() * originalValue.length);
+          const randomChar = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // Random lowercase letter
+          newValue = originalValue.slice(0, randomIndex) + randomChar + originalValue.slice(randomIndex);
+          break;
+        default:
+          break;
       }
+
+      user[randomProperty] = newValue;
     }
   }
-  return outputUser;
+
+  return user;
 }
-  
+
 export default introduceErrors;

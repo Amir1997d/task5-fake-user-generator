@@ -16,29 +16,29 @@ function generateFakeUsers(count, seed, region, errorAmount) {
 
   for (let i = 0; i < count; i++) {
     let sex = (i + 10) % 2 === 0 ? 'male' : 'female';
+    const originalId = fakerRegion.string.uuid();
     const originalFirstName = fakerRegion.person.firstName(sex);
     const originalLastName = fakerRegion.person.lastName(sex);
     const originalMiddleName = fakerRegion.person.middleName(sex);
     const originalCity = fakerRegion.location.city();
     const originalStreet = fakerRegion.location.street();
     const originalPhone = fakerRegion.phone.number();
+    const originalBuilding = fakerRegion.location.buildingNumber();
 
     const fakeUser = {
       index: i + 1,
-      id: fakerRegion.string.uuid(),
+      id: originalId,
       fName: originalFirstName,
       lName: originalLastName,
       mName: originalMiddleName,
-      country: region,
       city: originalCity,
       street: originalStreet,
-      building: fakerRegion.location.buildingNumber(),
+      building: originalBuilding,
       phone: originalPhone
     };
 
     fakeUsers.push(introduceErrors(fakeUser, errorAmount));
   }
-  console.log(errorAmount);
   return fakeUsers;
 }
 
